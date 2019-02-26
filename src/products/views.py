@@ -1,4 +1,5 @@
 from django.http import Http404
+from django.http import HttpResponse
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 from django.views.generic.list import ListView
@@ -14,7 +15,7 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
     model = Product
     template_name = 'form.html'
     form_class = ProductModelForm
-    success_url = '/add'
+    success_url = '/list'
 
     def form_valid(self, form):
         user = self.request.user
@@ -24,6 +25,11 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
 class ProductDetailView(DetailView):
     model = Product
 
+class ProductDownloadView(DetailView):
+    model = Product
+    def get(self, request, *args, **kwargs):
+        obj = self.get_object()
+        return HttpResponse('%s' %(obj))
 
 class ProductListView(ListView):
     model = Product
